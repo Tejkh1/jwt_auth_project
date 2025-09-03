@@ -1,8 +1,10 @@
 package com.example.jwt_auth.controller;
 
+import com.example.jwt_auth.entity.Role;
 import com.example.jwt_auth.entity.User;
 import com.example.jwt_auth.repository.UserRepository;
 import com.example.jwt_auth.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +65,12 @@ public class AuthController {
     }
     @PostMapping("admin/register")
     public ResponseEntity<String> registerAdmin(@RequestBody User user) {
-     //   user.setRole("ADMIN");
+        if(user.getRole() == Role.ADMIN) {
+            user.setRole(Role.ADMIN);
+        }
+        else {
+            user.setRole(Role.USER);
+        }
         userService.saveUser(user);
         return ResponseEntity.ok("admin registered successfully!");
     }
