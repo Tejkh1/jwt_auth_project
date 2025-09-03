@@ -1,4 +1,4 @@
-package com.example.jwt_auth.config;  // 👈 change package according to your project
+package com.example.jwt_auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/refresh-token").permitAll()
+                        .requestMatchers("/api/auth/admin/register", "/api/auth/login", "/api/auth/refresh-token").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // only ADMIN
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER & ADMIN
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // no session

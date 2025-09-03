@@ -10,6 +10,7 @@ import com.example.jwt_auth.repository.UserRepository;
 @Service
 public class UserService {
 
+    
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 

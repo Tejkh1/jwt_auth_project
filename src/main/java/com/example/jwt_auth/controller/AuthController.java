@@ -25,11 +25,12 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    public AuthController(UserService userService, JwtUtil jwtUtil,UserRepository userRepository) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, UserRepository userRepository) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -48,22 +49,30 @@ public class AuthController {
 
             // String token = jwtUtil.generateToken(user.getEmail());
             //return ResponseEntity.ok(Collections.singletonMap("token", token));
-          //  return ResponseEntity.ok(token);
+            //  return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         userService.saveUser(user);
         return ResponseEntity.ok("User registered successfully!");
     }
-
-    @GetMapping("/me")
-    public ResponseEntity<String> getProfile() {
-        return ResponseEntity.ok("Access granted to protected route!");
+    @PostMapping("admin/register")
+    public ResponseEntity<String> registerAdmin(@RequestBody User user) {
+     //   user.setRole("ADMIN");
+        userService.saveUser(user);
+        return ResponseEntity.ok("admin registered successfully!");
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> getProfile() {
+        return ResponseEntity.ok("This is USER profile data(assesible to user and admin) Access granted to protected route!");
+    }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
@@ -88,8 +97,6 @@ public class AuthController {
                 "accessToken", newAccessToken
         ));
     }
-
-
 
 }
 
